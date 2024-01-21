@@ -2,6 +2,7 @@ package com.backend.testManagement.controller;
 
 import com.backend.testManagement.dto.*;
 import com.backend.testManagement.model.Test;
+import com.backend.testManagement.model.User;
 import com.backend.testManagement.services.TestService;
 import com.backend.testManagement.services.UserService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -65,6 +67,15 @@ public class UserController {
     public ResponseEntity<String> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
         String tokenResponse = userService.loginUser(userLoginDTO);
         return ResponseEntity.status(HttpStatus.OK).body(tokenResponse);
+    }
+
+    @GetMapping("/getAllUsers")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved all tests")
+    @ApiResponse(responseCode = "404", description = "No tests found")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
+    @ApiResponse(responseCode = "400", description = "Invalid request")
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 
 

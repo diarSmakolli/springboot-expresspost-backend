@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -66,6 +67,12 @@ public class PorosiaController {
         return ResponseEntity.ok(numriPorosive);
     }
 
+    @GetMapping("/getStatusiCountByUserId")
+    public ResponseEntity<Integer> getStatusiCountByUserId(@RequestParam String userId, @RequestParam String statusi) {
+        int numriStatusit = porosiaService.getNumriStatusitByUserId(userId, statusi);
+        return ResponseEntity.ok(numriStatusit);
+    }
+
     
 
     @PostMapping(value = "/save")
@@ -74,9 +81,8 @@ public class PorosiaController {
     @ApiResponse(responseCode = "500", description = "Internal server error")
     @ApiResponse(responseCode = "403", description = "Forbidden")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
-    public ResponseEntity<PorosiaDTO> savePorosia(@RequestBody PorosiaDTOSave porosiaDTO, @RequestParam String userId) {
+    public ResponseEntity<PorosiaDTO> savePorosia(@Valid @RequestBody PorosiaDTOSave porosiaDTO, @RequestParam String userId) {
 
-        // Kontrollo validitetin e ID-së së përdoruesit
         if (userId == null || userId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

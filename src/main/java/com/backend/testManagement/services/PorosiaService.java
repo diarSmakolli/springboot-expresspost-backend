@@ -15,6 +15,10 @@ public interface PorosiaService {
 
     int getNumriPorosiveByUserIdAndShteti(String userId, String shteti);
 
+    int getNumriStatusitByUserId(String userId, String statusi);
+
+
+
 
     PorosiaDTO saveTest(PorosiaDTOSave porosiaDTO, String userId);
     Porosia findTestById(String id);

@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -13,10 +15,30 @@ import java.time.LocalDateTime;
 public class BlogDTO {
 
     private String id;
+
+    @NotBlank
+    @Size(min = 2, max = 100)
     private String title;
-    private String lastname;
+
+    @NotBlank
+    @Size(min = 2, max = 100)
     private String description;
+
+    @NotBlank
+    @Size(min = 2, max = 100)
     private String image;
-    private LocalDateTime createdAt;
+
+    @NotBlank
+    @Size(min = 2, max = 100)
+    private Date createdAt;
+
+    @NotBlank
+    @Size(min = 2, max = 100)
+    private String author;
+
+    @NotBlank
+    @Size(min = 2, max = 100)
+    private String category;
+
 
 }

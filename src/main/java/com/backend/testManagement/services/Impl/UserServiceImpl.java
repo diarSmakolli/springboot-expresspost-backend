@@ -1,15 +1,14 @@
 package com.backend.testManagement.services.Impl;
 
 import com.backend.testManagement.config.KeycloakConfig;
-import com.backend.testManagement.dto.CommonResponseDTO;
-import com.backend.testManagement.dto.UserDTO;
-import com.backend.testManagement.dto.UserDTOSave;
-import com.backend.testManagement.dto.ValidationUtilsDTO;
-import com.backend.testManagement.dto.UserSaveDTO;
-import com.backend.testManagement.dto.UserLoginDTO;
+import com.backend.testManagement.dto.*;
 import com.backend.testManagement.exceptions.BadRequestException;
 import com.backend.testManagement.exceptions.EntityNotFoundException;
 import com.backend.testManagement.exceptions.InternalServerErrorException;
+import com.backend.testManagement.mapper.PorosiaMapper;
+import com.backend.testManagement.model.Porosia;
+import com.backend.testManagement.mapper.UserMapper;
+import com.backend.testManagement.model.Test;
 import com.backend.testManagement.model.User;
 import com.backend.testManagement.repository.UserRepository;
 import com.backend.testManagement.services.UserService;
@@ -42,6 +41,8 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private static final Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
 
+    private final UserMapper userMapper;
+
     private final Keycloak keycloak;
     private KeycloakConfig keycloakConfig;
 
@@ -51,7 +52,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Autowired
-    public UserServiceImpl(Keycloak keycloak, KeycloakConfig keycloakConfig, UserRepository userRepository) {
+    public UserServiceImpl(UserMapper userMapper, Keycloak keycloak, KeycloakConfig keycloakConfig, UserRepository userRepository) {
+        this.userMapper = userMapper;
         this.keycloak = keycloak;
         this.keycloakConfig = keycloakConfig;
         this.userRepository = userRepository;
@@ -148,6 +150,34 @@ public class UserServiceImpl implements UserService {
     }
 
 
+//    @Override
+//    @Transactional(readOnly = true)
+//    public CommonResponseDTO<TestDTO> getAllUsers(int pageNo, int pageSize, String sortBy, String sortDirection) {
+//        ValidationUtilsDTO.validatePageParameters(pageNo, pageSize);
+//        Sort sort = Sort.by(sortBy);
+//        if ("desc".equalsIgnoreCase(sortDirection)) {
+//            sort = sort.descending();
+//        }
+//        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+//        Page<Test> testPage = testRepository.findAll(pageable);
+//        if (testPage.isEmpty()) {
+//            logAndThrowEntityNotFoundException("No tests found");
+//        }
+//        List<TestDTO> testDTOs = testPage.getContent().stream()
+//                .map(testMapper::mapToDTO)
+//                .collect(Collectors.toList());
+//        return buildCommonResponse(testDTOs, testPage);
+//    }
+
+    @Override
+    @Transactional
+    public List<User> getAllUsers() {
+        List<User> users = userRepository.findAll();
+
+        return users;
+    }
+
+
 
     private void logAndThrowEntityNotFoundException(String message) {
         logger.warning(message);
@@ -163,6 +193,17 @@ public class UserServiceImpl implements UserService {
         logger.warning(message);
         throw new BadRequestException(message);
     }
+
+//    private CommonResponseDTO<UserDTO> buildCommonResponse(List<UserDTO> userDTOs, Page<User> userPage) {
+//
+//        return CommonResponseDTO.<PorosiaDTO>builder()
+//                .list(userDTOs)
+//                .totalItems(userPage.getTotalElements())
+//                .currentPage(userPage.getNumber())
+//                .pageNumber(userPage.getNumber())
+//                .pageSize(userPage.getSize())
+//                .build();
+//    }
 
 
 }

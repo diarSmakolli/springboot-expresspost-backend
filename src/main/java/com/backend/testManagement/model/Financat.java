@@ -28,12 +28,25 @@ public class Financat {
     @Column(name = "statusi")
     private String statusi; // default kerkuar -> procesuar(pagesa)
 
+    @Column(name = "shumaKerkeses")
+    private Double shumaKerkeses;
+
+    @Column(name = "sherbimiPostar")
+    private Double sherbimiPostar;
 
     @Column(name = "shumaTotaleNeto")
     private Double shumaTotaleNeto;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Date createdAt;
+
+    @ManyToOne
+    @JoinColumn(name = "porosia_id", nullable = false)
+    private Porosia porosia;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @PrePersist
     protected void onCreate() {

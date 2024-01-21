@@ -6,6 +6,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.UUID;
 
 
@@ -25,9 +27,6 @@ public class Blog {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "category")
-    private String lastname;
-
     @Column(name = "description")
     private String description;
 
@@ -35,12 +34,18 @@ public class Blog {
     private String image;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
+    @Column(name = "author")
+    private String author;
+
+    @Column(name = "category")
+    private String category;
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+
+        createdAt = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
     }
 
 }

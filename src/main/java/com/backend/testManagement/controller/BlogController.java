@@ -1,101 +1,92 @@
 package com.backend.testManagement.controller;
 
 import com.backend.testManagement.dto.CommonResponseDTO;
-import com.backend.testManagement.dto.TestDTO;
-import com.backend.testManagement.dto.TestDTOSave;
-import com.backend.testManagement.exceptions.BadRequestException;
-import com.backend.testManagement.exceptions.EntityNotFoundException;
-import com.backend.testManagement.model.Test;
-import com.backend.testManagement.services.TestService;
+import com.backend.testManagement.dto.BlogDTO;
+import com.backend.testManagement.dto.BlogDTOSave;
+import com.backend.testManagement.model.Blog;
+import com.backend.testManagement.services.BlogService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
-
 @RestController
-@RequestMapping("/api/tests")
+@RequestMapping("/api/blog")
 @Validated
-public class TestController {
-    private final TestService testService;
+public class BlogController {
+    private final BlogService blogService;
 
     @Autowired
-    public TestController(TestService testService) {
-        this.testService = testService;
+    public BlogController(BlogService blogService) {
+        this.blogService = blogService;
     }
 
     @GetMapping(value = "/getAll")
-    @ApiResponse(responseCode = "200", description = "Successfully retrieved all tests")
-    @ApiResponse(responseCode = "404", description = "No tests found")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved all blogs")
+    @ApiResponse(responseCode = "404", description = "No blogs found")
     @ApiResponse(responseCode = "500", description = "Internal server error")
     @ApiResponse(responseCode = "400", description = "Invalid request")
     @ApiResponse(responseCode = "403", description = "Forbidden")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
-    public ResponseEntity<CommonResponseDTO<TestDTO>> getAllTests(
+    public ResponseEntity<CommonResponseDTO<BlogDTO>> getAllBlogs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortProperty,
             @RequestParam(defaultValue = "asc") String order) {
 
-        CommonResponseDTO<TestDTO> responseDTO = testService.getAllTests(page, size, sortProperty, order);
+        CommonResponseDTO<BlogDTO> responseDTO = blogService.getAllBlogs(page, size, sortProperty, order);
         return ResponseEntity.ok(responseDTO);
 
     }
 
-    @PostMapping(value = "/save")
+    @PostMapping(value = "/create")
     @ApiResponse(responseCode = "201", description = "Test created successfully")
     @ApiResponse(responseCode = "400", description = "Invalid request")
     @ApiResponse(responseCode = "500", description = "Internal server error")
     @ApiResponse(responseCode = "403", description = "Forbidden")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
-    public ResponseEntity<TestDTO> saveTest(@Valid @RequestBody TestDTOSave testDTO) {
+    public ResponseEntity<BlogDTO> saveTest(@RequestBody BlogDTOSave blogDTO) {
 
-
-        TestDTO savedTestDTO = testService.saveTest(testDTO);
-
+        BlogDTO savedTestDTO = blogService.saveBlog(blogDTO);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(savedTestDTO);
-
-
     }
 
     @PutMapping("/{id}")
-    @ApiResponse(responseCode = "200", description = "Test updated successfully")
+    @ApiResponse(responseCode = "200", description = "Blog updated successfully")
     @ApiResponse(responseCode = "400", description = "Invalid request")
-    @ApiResponse(responseCode = "404", description = "Test not found")
+    @ApiResponse(responseCode = "404", description = "Blog not found")
     @ApiResponse(responseCode = "500", description = "Internal server error")
     @ApiResponse(responseCode = "403", description = "Forbidden")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
-    public ResponseEntity<TestDTO> updateTest(@PathVariable String id, @RequestBody TestDTOSave testDTO) {
-
-        TestDTO updatedTestDTO = testService.updateTest(id, testDTO);
-        return ResponseEntity.ok(updatedTestDTO);
-
+    public ResponseEntity<BlogDTO> updateBlog(@PathVariable String id, @RequestBody BlogDTOSave blogDTO) {
+        BlogDTO updatedBlogDTO = blogService.updateBlog(id, blogDTO);
+        return ResponseEntity.ok(updatedBlogDTO);
     }
 
     @GetMapping("/{id}")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved test by ID")
     @ApiResponse(responseCode = "404", description = "Test not found")
     @ApiResponse(responseCode = "500", description = "Internal server error")
-    public ResponseEntity<Test> findById(@PathVariable String id) {
-        Test testDTO = testService.findTestById(id);
-        return ResponseEntity.ok(testDTO);
+    public ResponseEntity<Blog> findById(@PathVariable String id) {
+        Blog blogDTO = blogService.findBlogById(id);
+        return ResponseEntity.ok(blogDTO);
     }
+
+
     @DeleteMapping(value = "/{id}")
     @ApiResponse(responseCode = "404", description = "Test not found")
     @ApiResponse(responseCode = "200", description = "Successfully deleted test")
     @ApiResponse(responseCode = "400", description = "Invalid request")
     @ApiResponse(responseCode = "403", description = "Forbidden")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
-    public ResponseEntity<Test> deteleteTest(@PathVariable String id) {
-        Test testDTO = testService.deleteTest(id);
-        return ResponseEntity.ok(testDTO);
+    public ResponseEntity<Blog> deleteBlog(@PathVariable String id) {
+        Blog blogDTO = blogService.deleteBlog(id);
+        return ResponseEntity.ok(blogDTO);
     }
+
+
 }

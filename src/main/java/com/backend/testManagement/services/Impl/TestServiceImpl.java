@@ -11,6 +11,7 @@ import com.backend.testManagement.mapper.TestMapper;
 import com.backend.testManagement.model.Test;
 import com.backend.testManagement.repository.TestRepository;
 import com.backend.testManagement.services.TestService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -41,6 +42,8 @@ public class TestServiceImpl implements TestService {
     @Transactional
     public TestDTO saveTest(TestDTOSave testDTO) {
         try {
+            validateTestDTO(testDTO);
+
             Test test = testMapper.mapToEntity(testDTO);
             Test savedTest = testRepository.save(test);
             return testMapper.mapToDTO(savedTest);
@@ -50,6 +53,12 @@ public class TestServiceImpl implements TestService {
         } catch (BadRequestException ex) {
             logAndThrowBadRequest("Invalid request: " + ex.getMessage());
             return null;
+        }
+    }
+
+    private void validateTestDTO(TestDTOSave testDTO) {
+        if (StringUtils.isBlank(testDTO.getName()) || StringUtils.isBlank(testDTO.getLastname())) {
+            throw new BadRequestException("Name and Last Name cannot be empty");
         }
     }
 
